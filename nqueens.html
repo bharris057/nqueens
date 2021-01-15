@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>n Queens Algorithm</title>
+
+<script>
+
+// Main function
+function main() {
+	var n = document.getElementById('queensSelect').value; // Get value for n from <select>
+	var s = nQueens(n); // Run the nQueens algorithm
+	if (s)
+		buildTable(s); // If there is a solution, display it
+	else
+		document.getElementById('tableDiv').innerHTML = 'No solution for ' + n;
+}
+
+// Returns false if no solution is found, returns array of Coords if a solution is found.
+function nQueens(n) {
+	var s = new Array(); // The "stack"
+	var row = 1;
+	var col = 1;
+	while (s.length < n) {
+		if (col > n && s.length == 0) {
+			return false; // No solution
+		} else if (!conflict(s, row, col) && col <= n) {
+			s.push(new Coords(row, col));
+			row++; col = 1;
+		} else if (col <= n) {
+			col++;
+		} else {
+			row = s[s.length-1].row;
+			col = s[s.length-1].col + 1;
+			s.pop();
+		}
+	}
+	return s;
+}
+
+// Returns bool, true if there is a conflict, false if no conflict.
+// s is the stack (array) of Coords, row and col represent the coords to be checked
+// against each element in s.
+function conflict(s, row, col) {
+	for (var i=0; i < s.length; i++) {
+		if (s[i].row == row) {
+			return true; // Same row
+		} else if (s[i].col == col) {
+			return true; // Same column
+		} else if ((s[i].col - s[i].row) == (col - row)) {
+			return true; // Same NW-SE diagonal
+		} else if ((s[i].col + s[i].row) == (col + row)) {
+			return true; // Same NE-SW diagonal
+		}
+	}
+	return false; // No conflict
+}
+
+// Returns void, used for visually displaying the solution.
+function buildTable(s) {
+	var n = s.length;
+	
+	// Add table rows and cells to the DOM
+	var htmlStr="<table>";
+	for(i=0; i<n; i++) {
+		htmlStr += "<tr>"
+		for(j=0; j<n; j++) {
+			htmlStr +="<td id='r" + (i+1) + "c" + (j+1) + "'></td>";
+		}
+		htmlStr += "</tr>";
+	}
+	htmlStr += "</table>";
+	document.getElementById('tableDiv').innerHTML = htmlStr;
+	
+	// Place queens in the table (on the board)
+	for (var k=0; k<n; k++) {
+		var id = "r" + s[k].row + "c" + s[k].col;
+		document.getElementById(id).style.backgroundColor = '#000000';
+	}
+}
+
+// Class definition for Coords objects.
+function Coords(row, col) {
+	this.row = row;
+	this.col = col;
+}
+
+</script>
+
+<style>
+#tableDiv {
+	padding: 15px;
+}
+#tableDiv table td {
+	height: 25px;
+	width: 21px;
+	border: 1px solid #000000;
+}
+</style>
+
+</head>
+
+<body>
+	<h1>n Queens Algorithm</h1>
+	<ul><li><a href="http://en.wikipedia.org/wiki/Eight_queens_puzzle">http://en.wikipedia.org/wiki/Eight_queens_puzzle</a></li></ul>
+	<form>
+		<fieldset>
+			<legend>Controls</legend>
+			Queens:
+			<select id="queensSelect">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="16">16</option>
+				<option value="17">17</option>
+				<option value="18">18</option>
+				<option value="19">19</option>
+				<option value="20">20</option>
+				<option value="21">21</option>
+				<option value="22">22</option>
+				<option value="23">23</option>
+				<option value="24">24</option>
+				<option value="25">25</option>
+			</select>
+			<input type="button" id="drawButton" value="Draw" onclick="main()" /><br /><br />
+			Note: A value of 22 for <em>n</em> will probably cause the browser to timeout. It's a very long calculation.
+		</fieldset>
+	</form>
+	<form>
+		<fieldset>
+			<legend>Solution</legend>
+			<div id="tableDiv"></div>
+		</fieldset>
+	</form><br />
+	Algorithm implementation by bharris057 <br />
+	<em>9-Oct-2012</em>
+	
+	<div id="divDebug"></div>
+</body>
+</html>
